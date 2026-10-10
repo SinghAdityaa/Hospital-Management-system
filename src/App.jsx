@@ -9,6 +9,7 @@ import { About, Services, Contact } from './pages/StaticPages';
 import { PrivacyPolicy, TermsAndConditions } from './pages/Legal';
 import DashboardLayout from './layouts/DashboardLayout';
 import ProtectedRoute from './components/ProtectedRoute';
+import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 import {
   Overview,
   Appointments,
