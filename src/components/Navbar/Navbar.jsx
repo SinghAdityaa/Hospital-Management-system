@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Menu, X, HeartPulse } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import ThemeToggle from "../ThemeToggle/ThemeToggle.jsx";
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const { user, logout } = useApp();
@@ -34,6 +35,7 @@ export default function Navbar() {
           </NavLink>
         </nav>
         <div className={open ? 'nav-actions open' : 'nav-actions'}>
+          <ThemeToggle />
           {user ? (
             <>
               <Link className="btn btn-outline" to="/dashboard" onClick={close}>
