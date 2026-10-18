@@ -27,11 +27,11 @@ export default function Footer() {
         </div>
         <div>
           <h4>Contact</h4>
-          <p>Frontend demonstration. Contact details pending deployment.</p>
+          <p>9137152962.</p>
         </div>
       </div>
       <div className="footer-bottom">
-        © {new Date().getFullYear()} HealthCare+. Frontend demonstration only.
+        © {new Date().getFullYear()} HealthCare+. All rights reserved.
       </div>
     </footer>
   );

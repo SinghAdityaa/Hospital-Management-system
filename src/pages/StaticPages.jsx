@@ -35,9 +35,8 @@ export function About() {
         <div className="about-panel card">
           <h2>Designed for multiple healthcare roles.</h2>
           <p>
-            Patients can find doctors, request appointments, view reports and prescriptions.
-            Healthcare staff get their own dashboards for managing workflows. This project is a
-            frontend demonstration; no real patient data should be entered.
+             doctors, request appointments, view reports and prescriptions.
+            Healthcare staff get their own dashboards for managing workflows. 
           </p>
         </div>
       </main>
@@ -85,9 +84,8 @@ export function Contact() {
         <div className="contact-grid">
           <div className="card pad">
             <h2>Contact information</h2>
-            <p>Contact details will be published after deployment.</p>
+            <p>9137152962.</p>
             <small className="muted">
-              Demo contact information, not an active healthcare service.
             </small>
           </div>
           <form
