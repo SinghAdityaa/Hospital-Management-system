@@ -1819,3 +1819,60 @@ td select {
   color: #ffffff;
 }
 
+
+/* Patient registration validation */
+
+.register-grid [aria-invalid="true"] {
+  border-color: #c43d3d;
+  box-shadow: 0 0 0 1px rgba(196, 61, 61, 0.12);
+}
+
+.register-grid [aria-invalid="true"]:focus {
+  outline: 2px solid #c43d3d;
+  outline-offset: 1px;
+}
+
+.register-grid .field-error {
+  display: block;
+  margin-top: 2px;
+  color: #b42318;
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+[data-theme="dark"] .register-grid .field-error {
+  color: #ffaaaa;
+}
+
+[data-theme="dark"] .register-grid [aria-invalid="true"] {
+  border-color: #ff8585;
+}
+
+.register-grid button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+/* Patient registration validation */
+
+.register-grid [aria-invalid="true"] {
+  border-color: #c43d3d;
+  box-shadow: 0 0 0 1px rgba(196, 61, 61, 0.12);
+}
+
+.register-grid .field-error {
+  display: block;
+  margin-top: 2px;
+  color: #b42318;
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+[data-theme="dark"] .register-grid .field-error {
+  color: #ffaaaa;
+}
+
+[data-theme="dark"] .register-grid [aria-invalid="true"] {
+  border-color: #ff8585;
+}

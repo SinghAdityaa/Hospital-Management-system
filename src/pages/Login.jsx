@@ -1,6 +1,12 @@
 
 import React, { useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+
+import {
+  Link,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
+
 import {
   Mail,
   LockKeyhole,
@@ -20,9 +26,13 @@ export default function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] =
+    useState(false);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [unverified, setUnverified] =
+    useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -30,28 +40,43 @@ export default function Login() {
     if (loading) return;
 
     setError("");
+    setUnverified(false);
     setLoading(true);
 
     try {
       await login(email.trim(), password);
 
       const redirectPath =
-        location.state?.from?.pathname || "/dashboard";
+        location.state?.from?.pathname ||
+        "/dashboard";
 
       navigate(redirectPath, {
         replace: true,
       });
     } catch (err) {
-      console.error("Login failed:", err);
-
       const status = err.response?.status;
+      const code = err.response?.data?.code;
 
-      if (status === 400 || status === 401) {
+      if (
+        status === 403 &&
+        code === "EMAIL_NOT_VERIFIED"
+      ) {
+        setUnverified(true);
+
+        setError(
+          "Please verify your email address before logging in."
+        );
+      } else if (status === 400 || status === 401) {
         setError("Invalid email or password.");
       } else if (status === 403) {
-        setError("You do not have permission to access this account.");
+        setError(
+          err.response?.data?.message ||
+          "Access to this account is restricted."
+        );
       } else if (status === 429) {
-        setError("Too many login attempts. Please try again later.");
+        setError(
+          "Too many login attempts. Please try again later."
+        );
       } else if (err.code === "ECONNABORTED") {
         setError(
           "The server is taking too long to respond. Please try again."
@@ -60,7 +85,8 @@ export default function Login() {
         setError(err.response.data.message);
       } else {
         setError(
-          err.message || "Unable to log in. Please try again."
+          err.message ||
+          "Unable to log in. Please try again."
         );
       }
     } finally {
@@ -80,12 +106,18 @@ export default function Login() {
           <h1>Doctor Appointment System</h1>
 
           <p>
-            Manage appointments, patients and healthcare services
-            in one secure platform.
+            Manage appointments, patients and
+            healthcare services in one platform.
           </p>
 
-          <div className="login-doctor" aria-hidden="true">
-            <Stethoscope size={112} strokeWidth={1.2} />
+          <div
+            className="login-doctor"
+            aria-hidden="true"
+          >
+            <Stethoscope
+              size={112}
+              strokeWidth={1.2}
+            />
           </div>
         </div>
       </div>
@@ -101,7 +133,10 @@ export default function Login() {
             <p>Login to your account</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="form">
+          <form
+            onSubmit={handleSubmit}
+            className="form"
+          >
             <label>
               Email
 
@@ -114,6 +149,7 @@ export default function Login() {
                   onChange={(event) => {
                     setEmail(event.target.value);
                     setError("");
+                    setUnverified(false);
                   }}
                   placeholder="Enter your email"
                   autoComplete="email"
@@ -130,11 +166,16 @@ export default function Login() {
                 <LockKeyhole size={18} />
 
                 <input
-                  type={showPassword ? "text" : "password"}
+                  type={
+                    showPassword
+                      ? "text"
+                      : "password"
+                  }
                   value={password}
                   onChange={(event) => {
                     setPassword(event.target.value);
                     setError("");
+                    setUnverified(false);
                   }}
                   placeholder="Enter your password"
                   autoComplete="current-password"
@@ -146,13 +187,19 @@ export default function Login() {
                   type="button"
                   className="eye"
                   title={
-                    showPassword ? "Hide password" : "Show password"
+                    showPassword
+                      ? "Hide password"
+                      : "Show password"
                   }
                   aria-label={
-                    showPassword ? "Hide password" : "Show password"
+                    showPassword
+                      ? "Hide password"
+                      : "Show password"
                   }
                   onClick={() =>
-                    setShowPassword((previous) => !previous)
+                    setShowPassword(
+                      (previous) => !previous
+                    )
                   }
                 >
                   {showPassword ? (
@@ -165,19 +212,48 @@ export default function Login() {
             </label>
 
             <div className="form-options">
-              <label className="checkbox">
-                <input type="checkbox" disabled={loading} />
-                Remember Me
-              </label>
+              <span className="muted">
+                You will need to log in again
+                after refreshing the page.
+              </span>
 
               <Link to="/forgot-password">
                 Forgot Password?
               </Link>
             </div>
 
+            {location.state?.verificationSuccess &&
+              !error && (
+                <div
+                  className="success"
+                  role="status"
+                >
+                  Email verified successfully.
+                  You can now log in.
+                </div>
+              )}
+
             {error && (
-              <div className="error" role="alert">
+              <div
+                className="error"
+                role="alert"
+              >
                 {error}
+
+                {unverified && (
+                  <div className="spaced">
+                    <Link
+                      to="/check-email"
+                      state={{
+                        email: email
+                          .trim()
+                          .toLowerCase(),
+                      }}
+                    >
+                      Resend verification email
+                    </Link>
+                  </div>
+                )}
               </div>
             )}
 
@@ -186,13 +262,17 @@ export default function Login() {
               type="submit"
               disabled={loading}
             >
-              {loading ? "Logging in..." : "Login"}
+              {loading
+                ? "Logging in..."
+                : "Login"}
             </button>
           </form>
 
           <p className="signup-line">
             New Patient?{" "}
-            <Link to="/register">Register Here</Link>
+            <Link to="/register">
+              Register Here
+            </Link>
           </p>
         </div>
       </div>
@@ -211,7 +291,10 @@ export function ForgotPassword() {
           Please contact support for assistance.
         </p>
 
-        <Link className="btn btn-primary" to="/login">
+        <Link
+          className="btn btn-primary"
+          to="/login"
+        >
           Back to login
         </Link>
       </div>

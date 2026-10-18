@@ -6,7 +6,13 @@ import React, {
   useState,
 } from "react";
 
-import { load, save, reset, makeId } from "../services/storage";
+import {
+  load,
+  save,
+  reset,
+  makeId,
+} from "../services/storage";
+
 import {
   loginPatient,
   logoutPatient,
@@ -16,20 +22,27 @@ const AppContext = createContext(null);
 
 function normalizeUser(profile) {
   if (!profile || typeof profile !== "object") {
-    throw new Error("Invalid user information received from the server.");
+    throw new Error(
+      "Invalid user information received from the server."
+    );
   }
 
   const fullName = String(
     profile.name || profile.fullName || ""
   ).trim();
 
-  const nameParts = fullName ? fullName.split(/\s+/) : [];
+  const nameParts = fullName
+    ? fullName.split(/\s+/)
+    : [];
 
   const firstName =
-    profile.firstName || nameParts[0] || "Patient";
+    profile.firstName ||
+    nameParts[0] ||
+    "Patient";
 
   const lastName =
-    profile.lastName || nameParts.slice(1).join(" ");
+    profile.lastName ||
+    nameParts.slice(1).join(" ");
 
   const role = String(profile.role || "PATIENT")
     .replace(/^ROLE_/i, "")
@@ -46,18 +59,22 @@ function normalizeUser(profile) {
 }
 
 export function AppProvider({ children }) {
-  // Demo data for features without backend APIs.
+  // Existing demo data for features that
+  // are not yet connected to Spring Boot.
   const [data, setData] = useState(() => ({
     ...load(),
     session: null,
   }));
 
-  // Temporary in-memory login state.
+  // Login exists only while this React
+  // application instance is running.
   const [user, setUser] = useState(null);
 
-  const [authLoading, setAuthLoading] = useState(false);
+  const [authLoading, setAuthLoading] =
+    useState(false);
 
-  // Save demo application data, not authenticated sessions.
+  // Persist demo data only, never a
+  // logged-in user or login credentials.
   useEffect(() => {
     save({
       ...data,
@@ -73,15 +90,19 @@ export function AppProvider({ children }) {
     }));
   };
 
-  // Login through the deployed Spring Boot API.
+  // Validate login through Spring Boot.
   const login = async (email, password) => {
     setAuthLoading(true);
     setUser(null);
 
     try {
-      const profile = await loginPatient(email, password);
+      const profile = await loginPatient(
+        email,
+        password
+      );
 
-      const authenticatedUser = normalizeUser(profile);
+      const authenticatedUser =
+        normalizeUser(profile);
 
       setUser(authenticatedUser);
 
@@ -94,27 +115,29 @@ export function AppProvider({ children }) {
     }
   };
 
-  // Logout clears frontend login state.
+  // Clear the current user from React memory.
   const logout = () => {
     logoutPatient();
     setUser(null);
   };
 
-  // Registration must use patientService.js.
+  // Registration is performed by patientService.js.
   const register = async () => {
     throw new Error(
       "Patient registration must use the Spring Boot registration API."
     );
   };
 
-  // Appointment management: demo data only.
+  // Appointments: existing demo operations.
   const addAppointment = (appointment) => {
     update((previous) => ({
       appointments: [
         {
           ...appointment,
           id: makeId("a"),
-          createdAt: new Date().toISOString().slice(0, 10),
+          createdAt: new Date()
+            .toISOString()
+            .slice(0, 10),
           status: "Pending",
         },
         ...previous.appointments,
@@ -124,22 +147,25 @@ export function AppProvider({ children }) {
 
   const changeAppointment = (id, status) => {
     update((previous) => ({
-      appointments: previous.appointments.map((item) =>
-        item.id === id
-          ? { ...item, status }
-          : item
+      appointments: previous.appointments.map(
+        (item) =>
+          item.id === id
+            ? { ...item, status }
+            : item
       ),
     }));
   };
 
-  // Laboratory reports: demo data only.
+  // Laboratory: existing demo operations.
   const addReport = (report) => {
     update((previous) => ({
       reports: [
         {
           ...report,
           id: makeId("r"),
-          date: new Date().toISOString().slice(0, 10),
+          date: new Date()
+            .toISOString()
+            .slice(0, 10),
         },
         ...previous.reports,
       ],
@@ -148,22 +174,25 @@ export function AppProvider({ children }) {
 
   const changeReport = (id, status) => {
     update((previous) => ({
-      reports: previous.reports.map((item) =>
-        item.id === id
-          ? { ...item, status }
-          : item
+      reports: previous.reports.map(
+        (item) =>
+          item.id === id
+            ? { ...item, status }
+            : item
       ),
     }));
   };
 
-  // Prescriptions: demo data only.
+  // Prescriptions: existing demo operations.
   const addPrescription = (prescription) => {
     update((previous) => ({
       prescriptions: [
         {
           ...prescription,
           id: makeId("p"),
-          date: new Date().toISOString().slice(0, 10),
+          date: new Date()
+            .toISOString()
+            .slice(0, 10),
           status: "Pending",
         },
         ...previous.prescriptions,
@@ -173,15 +202,16 @@ export function AppProvider({ children }) {
 
   const changePrescription = (id, status) => {
     update((previous) => ({
-      prescriptions: previous.prescriptions.map((item) =>
-        item.id === id
-          ? { ...item, status }
-          : item
+      prescriptions: previous.prescriptions.map(
+        (item) =>
+          item.id === id
+            ? { ...item, status }
+            : item
       ),
     }));
   };
 
-  // Doctor management: demo data only.
+  // Doctors: existing demo operations.
   const addDoctor = (doctor) => {
     update((previous) => ({
       doctors: [

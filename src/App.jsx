@@ -1,5 +1,5 @@
-
 import React from "react";
+
 import {
   Routes,
   Route,
@@ -8,8 +8,13 @@ import {
 
 import Home from "./pages/Home";
 import Doctors from "./pages/Doctors";
-import Login, { ForgotPassword } from "./pages/Login";
+
+import Login, {
+  ForgotPassword,
+} from "./pages/Login";
+
 import Register from "./pages/Register";
+
 import BookAppointment from "./pages/BookAppointment";
 import CheckEmail from "./pages/CheckEmail";
 import VerifyEmail from "./pages/VerifyEmail";
@@ -49,11 +54,25 @@ function guard(element, roles) {
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route
+        path="/"
+        element={<Home />}
+      />
 
-      <Route path="/about" element={<About />} />
-      <Route path="/services" element={<Services />} />
-      <Route path="/contact" element={<Contact />} />
+      <Route
+        path="/about"
+        element={<About />}
+      />
+
+      <Route
+        path="/services"
+        element={<Services />}
+      />
+
+      <Route
+        path="/contact"
+        element={<Contact />}
+      />
 
       <Route
         path="/privacy"
@@ -70,8 +89,15 @@ export default function App() {
         element={<Doctors />}
       />
 
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+      <Route
+        path="/login"
+        element={<Login />}
+      />
+
+      <Route
+        path="/register"
+        element={<Register />}
+      />
 
       <Route
         path="/forgot-password"
@@ -95,9 +121,14 @@ export default function App() {
 
       <Route
         path="/dashboard"
-        element={guard(<DashboardLayout />)}
+        element={guard(
+          <DashboardLayout />
+        )}
       >
-        <Route index element={<Overview />} />
+        <Route
+          index
+          element={<Overview />}
+        />
 
         <Route
           path="appointments"
@@ -106,14 +137,20 @@ export default function App() {
 
         <Route
           path="profile"
-          element={guard(<Profile />, ["patient"])}
+          element={guard(
+            <Profile />,
+            ["patient"]
+          )}
         />
 
         <Route
           path="patients"
           element={guard(
             <Patients />,
-            ["admin", "reception"]
+            [
+              "admin",
+              "reception",
+            ]
           )}
         />
 
@@ -121,7 +158,10 @@ export default function App() {
           path="reports"
           element={guard(
             <Reports />,
-            ["patient", "lab"]
+            [
+              "patient",
+              "lab",
+            ]
           )}
         />
 
@@ -129,7 +169,11 @@ export default function App() {
           path="prescriptions"
           element={guard(
             <Prescriptions />,
-            ["patient", "doctor", "pharmacy"]
+            [
+              "patient",
+              "doctor",
+              "pharmacy",
+            ]
           )}
         />
 
@@ -148,7 +192,10 @@ export default function App() {
           <main className="auth-page">
             <div className="card auth-card center">
               <h1>404</h1>
-              <p>Page not found.</p>
+
+              <p>
+                Page not found.
+              </p>
 
               <Link
                 className="btn btn-primary"

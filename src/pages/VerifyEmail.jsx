@@ -1,6 +1,14 @@
+import React, {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
-import React, { useEffect, useRef, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import {
+  Link,
+  useSearchParams,
+} from "react-router-dom";
+
 import {
   BadgeCheck,
   CircleAlert,
@@ -20,6 +28,7 @@ export default function VerifyEmail() {
   const attempted = useRef(false);
 
   const [status, setStatus] = useState("loading");
+
   const [message, setMessage] = useState(
     "Verifying your email address..."
   );
@@ -57,6 +66,7 @@ export default function VerifyEmail() {
         await verifyEmail(token);
 
         setStatus("success");
+
         setMessage(
           "Your email has been verified successfully. You can now log in."
         );
@@ -65,7 +75,10 @@ export default function VerifyEmail() {
 
         setStatus("error");
 
-        if (statusCode === 400 || statusCode === 410) {
+        if (
+          statusCode === 400 ||
+          statusCode === 410
+        ) {
           setMessage(
             "This verification link is invalid or has expired."
           );
@@ -101,7 +114,10 @@ export default function VerifyEmail() {
 
             <h2>Verifying email</h2>
 
-            <p className="muted" role="status">
+            <p
+              className="muted"
+              role="status"
+            >
               {message}
             </p>
           </>
@@ -117,7 +133,10 @@ export default function VerifyEmail() {
 
             <h2>Email verified</h2>
 
-            <p className="muted" role="status">
+            <p
+              className="muted"
+              role="status"
+            >
               {message}
             </p>
 
@@ -125,6 +144,9 @@ export default function VerifyEmail() {
               <Link
                 className="btn btn-primary full"
                 to="/login"
+                state={{
+                  verificationSuccess: true,
+                }}
               >
                 Continue to login
               </Link>
@@ -140,9 +162,14 @@ export default function VerifyEmail() {
               aria-hidden="true"
             />
 
-            <h2>Verification unsuccessful</h2>
+            <h2>
+              Verification unsuccessful
+            </h2>
 
-            <p className="muted" role="alert">
+            <p
+              className="muted"
+              role="alert"
+            >
               {message}
             </p>
 

@@ -1,7 +1,13 @@
-
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { MailCheck, RefreshCw } from "lucide-react";
+import {
+  Link,
+  useLocation,
+} from "react-router-dom";
+
+import {
+  MailCheck,
+  RefreshCw,
+} from "lucide-react";
 
 import {
   EMAIL_VERIFICATION_ENABLED,
@@ -11,14 +17,16 @@ import {
 export default function CheckEmail() {
   const location = useLocation();
 
-  const email = location.state?.email || "";
+  const [email, setEmail] = useState(
+    location.state?.email || ""
+  );
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
   const handleResend = async () => {
-    if (loading || !email) return;
+    if (loading) return;
 
     setLoading(true);
     setMessage("");
@@ -51,7 +59,10 @@ export default function CheckEmail() {
     <main className="auth-page">
       <div className="card auth-card center">
         <div className="verification-icon">
-          <MailCheck size={52} strokeWidth={1.5} />
+          <MailCheck
+            size={52}
+            strokeWidth={1.5}
+          />
         </div>
 
         <h2>Check your email</h2>
@@ -59,64 +70,90 @@ export default function CheckEmail() {
         {EMAIL_VERIFICATION_ENABLED ? (
           <>
             <p className="muted">
-              Your registration request has been received.
-              We've sent an email verification link to your
-              registered email address.
+              Your registration request has been
+              received. We've sent an email
+              verification link to your registered
+              email address.
             </p>
 
-            {email && (
-              <p>
-                <strong>{email}</strong>
-              </p>
-            )}
+            <label
+              className="form"
+              style={{
+                textAlign: "left",
+                width: "100%",
+              }}
+            >
+              <span>Registered Gmail address</span>
+
+              <input
+                type="email"
+                value={email}
+                onChange={(event) => {
+                  setEmail(event.target.value);
+                  setError("");
+                  setMessage("");
+                }}
+                placeholder="patient@gmail.com"
+                autoComplete="email"
+                disabled={loading}
+              />
+            </label>
 
             <p className="muted">
-              Open the email and follow the verification
-              link to activate your account.
+              Open the email and follow the
+              verification link to activate
+              your account.
             </p>
 
             <p className="muted text-small">
-              If you don't see the email, check your spam
-              or junk folder.
+              If you don't see the email,
+              check your spam or junk folder.
             </p>
 
             {message && (
-              <div className="success" role="status">
+              <div
+                className="success"
+                role="status"
+              >
                 {message}
               </div>
             )}
 
             {error && (
-              <div className="error" role="alert">
+              <div
+                className="error"
+                role="alert"
+              >
                 {error}
               </div>
             )}
 
-            {email && (
-              <button
-                type="button"
-                className="btn btn-outline full"
-                onClick={handleResend}
-                disabled={loading}
-              >
-                <RefreshCw size={17} />
+            <button
+              type="button"
+              className="btn btn-outline full"
+              onClick={handleResend}
+              disabled={loading}
+            >
+              <RefreshCw size={17} />
 
-                {loading
-                  ? "Sending..."
-                  : "Resend verification email"}
-              </button>
-            )}
+              {loading
+                ? "Sending..."
+                : "Resend verification email"}
+            </button>
           </>
         ) : (
           <p className="muted">
-            Email verification is not available yet.
-            The backend verification service is still
-            being configured.
+            Email verification is not available
+            yet. The backend verification service
+            is still being configured.
           </p>
         )}
 
         <div className="spaced">
-          <Link className="btn btn-primary full" to="/login">
+          <Link
+            className="btn btn-primary full"
+            to="/login"
+          >
             Back to login
           </Link>
         </div>
