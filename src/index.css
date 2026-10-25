@@ -1974,3 +1974,99 @@ td select {
 [data-theme="dark"] .register-card .field-error {
   color: #ffaaaa;
 }
+/* ---- Doctors page: search + category filter ---- */
+.filters {
+  align-items: center;
+}
+
+.filters .search-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0 13px;
+  border: 1px solid #d4d9df;
+  border-radius: 7px;
+  background: #fff;
+}
+
+.filters .search-input svg {
+  flex-shrink: 0;
+}
+
+.filters .search-input input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 0;
+  background: transparent;
+}
+
+.filters select {
+  width: auto;
+  flex: 0 0 240px;
+}
+
+[data-theme="dark"] .filters .search-input {
+  background: var(--surface-secondary);
+  border-color: var(--border-color);
+}
+
+@media (max-width: 780px) {
+  .filters select,
+  .filters .search-input {
+    width: 100%;
+    flex: none;
+  }
+}
+
+/* ---- Doctors page: sort + pagination ---- */
+.filters {
+  scroll-margin-top: 90px;
+}
+
+.filters select {
+  flex: 0 0 210px;
+}
+
+.results-count {
+  margin: 0 0 16px;
+}
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 34px;
+}
+
+.pagination button {
+  min-width: 42px;
+  padding: 9px 14px;
+  border: 1px solid rgba(128, 128, 128, 0.45);
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.pagination button:hover:not(:disabled):not(.active) {
+  border-color: #1671c9;
+  color: #1671c9;
+}
+
+.pagination button.active {
+  background: #1671c9;
+  border-color: #1671c9;
+  color: #fff;
+}
+
+.pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.page-gap {
+  padding: 0 4px;
+  opacity: 0.6;
+}
