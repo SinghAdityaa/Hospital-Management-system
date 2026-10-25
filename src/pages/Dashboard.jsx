@@ -224,8 +224,7 @@ export function Appointments() {
                 </td>
                 <td>
                   {a.date}
-                  <small>{a.time}</small>
-                </td>
+<small>{a.time}{a.endTime ? ' - ' + a.endTime : ''}</small>                </td>
                 <td>{a.reason}</td>
                 <td>
                   <Status value={a.status} />

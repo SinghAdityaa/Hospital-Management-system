@@ -138,7 +138,7 @@ export function AppProvider({ children }) {
           createdAt: new Date()
             .toISOString()
             .slice(0, 10),
-          status: "Pending",
+          status: "Confirmed",
         },
         ...previous.appointments,
       ],

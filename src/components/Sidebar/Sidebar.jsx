@@ -62,7 +62,7 @@ export default function Sidebar() {
       </div>
       <nav>
         <Link className="side-link" to="/">
-          <Home size={19} /> Website
+          <Home size={19} /> Home
         </Link>
         {(items[user?.role] || []).map(([href, label, Icon]) => (
           <NavLink
