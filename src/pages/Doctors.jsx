@@ -18,6 +18,7 @@ const SORTS = {
   'name-asc': { label: 'Name: A to Z', fn: (a, b) => a.name.localeCompare(b.name) },
 };
 
+// Builds [1, '…', 4, 5, 6, '…', 20] style page lists
 function getPageList(current, total) {
   const wanted = new Set([1, total, current - 1, current, current + 1]);
   const pages = [...wanted].filter((p) => p >= 1 && p <= total).sort((a, b) => a - b);
@@ -35,7 +36,7 @@ export default function Doctors() {
   const [specialty, setSpecialty] = useState('All');
   const [sort, setSort] = useState('default');
   const [page, setPage] = useState(1);
-  const topRef = useRef(null);
+  const listRef = useRef(null);
 
   const specialties = ['All', ...new Set(doctors.map((d) => d.specialization))];
 
@@ -57,7 +58,11 @@ export default function Doctors() {
 
   function goToPage(p) {
     setPage(p);
-    topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const el = listRef.current;
+    // Only scroll if the top of the doctors list is above the screen
+    if (el && el.getBoundingClientRect().top < 100) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 
   return (
@@ -70,7 +75,7 @@ export default function Doctors() {
           <p>Choose the right doctor for your care.</p>
         </div>
 
-        <div className="filters card" ref={topRef}>
+        <div className="filters card">
           <label className="search-input">
             <Search size={19} />
             <input
@@ -112,19 +117,21 @@ export default function Doctors() {
           </select>
         </div>
 
-        {filtered.length > 0 && (
-          <p className="muted results-count">
-            Showing {startIndex + 1}–{startIndex + visible.length} of {filtered.length} doctors
-          </p>
-        )}
+        <div ref={listRef} className="doctors-list">
+          {filtered.length > 0 && (
+            <p className="muted results-count">
+              Showing {startIndex + 1}–{startIndex + visible.length} of {filtered.length} doctors
+            </p>
+          )}
 
-        <div className="doctors-grid">
-          {visible.map((d) => (
-            <DoctorCard key={d.id} doctor={d} />
-          ))}
+          <div className="doctors-grid">
+            {visible.map((d) => (
+              <DoctorCard key={d.id} doctor={d} />
+            ))}
+          </div>
+
+          {!filtered.length && <div className="empty card">No doctors match your search.</div>}
         </div>
-
-        {!filtered.length && <div className="empty card">No doctors match your search.</div>}
 
         {totalPages > 1 && (
           <nav className="pagination" aria-label="Doctors pages">

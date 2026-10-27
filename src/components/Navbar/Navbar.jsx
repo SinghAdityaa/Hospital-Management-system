@@ -14,6 +14,9 @@ export default function Navbar() {
         <Link className="brand" to="/" onClick={close}>
           <HeartPulse size={25} /> HealthCare<span>+</span>
         </Link>
+        <span className="nav-theme-mobile">
+  <ThemeToggle />
+</span>
         <button className="nav-toggle" aria-label="Toggle menu" onClick={() => setOpen(!open)}>
           {open ? <X /> : <Menu />}
         </button>

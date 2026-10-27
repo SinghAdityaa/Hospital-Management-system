@@ -2070,3 +2070,42 @@ td select {
   padding: 0 4px;
   opacity: 0.6;
 }
+
+/* ---- Mobile fixes: filters, theme toggle, scroll offset ---- */
+.doctors-list {
+  scroll-margin-top: 100px; /* keeps the list clear of the sticky header */
+}
+
+.nav-theme-mobile {
+  display: none;
+}
+
+@media (max-width: 780px) {
+  /* filter bar: normal-height controls when stacked */
+  .filters select,
+  .filters .search-input {
+    width: 100%;
+    flex: 0 0 auto;
+    min-width: 0;
+  }
+
+  .filters select {
+    height: auto;
+    padding: 12px 14px;
+  }
+
+  /* theme toggle next to the hamburger button */
+  .nav-theme-mobile {
+    display: flex;
+    margin-left: auto;
+  }
+
+  .nav-toggle {
+    margin-left: 12px;
+  }
+
+  /* hide the copy inside the opened menu so it isn't shown twice */
+  .nav-actions .theme-toggle {
+    display: none;
+  }
+}
