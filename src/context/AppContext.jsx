@@ -16,7 +16,15 @@ import {
 import {
   loginPatient,
   logoutPatient,
+  fetchCurrentUser,
 } from "../services/authService";
+
+import {
+  getToken,
+  getStoredUser,
+  saveSession,
+  clearSession,
+} from "../services/tokenStorage";
 
 const AppContext = createContext(null);
 
@@ -66,15 +74,15 @@ export function AppProvider({ children }) {
     session: null,
   }));
 
-  // Login exists only while this React
-  // application instance is running.
   const [user, setUser] = useState(null);
 
-  const [authLoading, setAuthLoading] =
-    useState(false);
+  // Starts true when a saved token exists, so protected pages
+  // wait until the login has been checked after a refresh.
+  const [authLoading, setAuthLoading] = useState(() =>
+    Boolean(getToken())
+  );
 
-  // Persist demo data only, never a
-  // logged-in user or login credentials.
+  // Persist demo data only
   useEffect(() => {
     save({
       ...data,
@@ -90,36 +98,93 @@ export function AppProvider({ children }) {
     }));
   };
 
+  // Restore the login after a page refresh
+  useEffect(() => {
+    const token = getToken();
+
+    if (!token) {
+      setAuthLoading(false);
+      return undefined;
+    }
+
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const current = await fetchCurrentUser();
+        if (cancelled) return;
+
+        // /me has no first/last name, so keep those from login
+        const cached = getStoredUser() || {};
+        const merged = normalizeUser({ ...cached, ...current });
+
+        saveSession(token, merged);
+        setUser(merged);
+      } catch (error) {
+        if (cancelled) return;
+
+        const status = error.response?.status;
+
+        if (status === 401 || status === 403) {
+          clearSession();
+          setUser(null);
+        } else {
+          // Server asleep or network problem: keep the saved user
+          const cached = getStoredUser();
+          setUser(cached ? normalizeUser(cached) : null);
+        }
+      } finally {
+        if (!cancelled) setAuthLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Token expired while using the app
+  useEffect(() => {
+    const onExpired = () => setUser(null);
+
+    window.addEventListener("auth:expired", onExpired);
+
+    return () =>
+      window.removeEventListener("auth:expired", onExpired);
+  }, []);
+
   // Validate login through Spring Boot.
   const login = async (email, password) => {
     setAuthLoading(true);
     setUser(null);
+    clearSession();
 
     try {
-      const profile = await loginPatient(
+      const { token, user: profile } = await loginPatient(
         email,
         password
       );
 
-      const authenticatedUser =
-        normalizeUser(profile);
+      const authenticatedUser = normalizeUser(profile);
 
+      saveSession(token, authenticatedUser);
       setUser(authenticatedUser);
 
       return authenticatedUser;
     } catch (error) {
       setUser(null);
+      clearSession();
       throw error;
     } finally {
       setAuthLoading(false);
     }
   };
 
-  // Clear the current user from React memory.
   const logout = () => {
     logoutPatient();
     setUser(null);
   };
+
 
   // Registration is performed by patientService.js.
   const register = async () => {

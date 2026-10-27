@@ -162,9 +162,9 @@ export default function Login() {
             </label>
 
             <div className="form-options">
-              <span className="muted">
-                You will need to log in again after refreshing the page.
-              </span>
+             <span className="muted">
+  Your login is saved on this device until you log out.
+</span>
 
               <Link to="/forgot-password">Forgot Password?</Link>
             </div>
